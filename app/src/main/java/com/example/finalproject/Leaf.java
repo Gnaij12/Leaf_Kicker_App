@@ -31,16 +31,17 @@ public class Leaf extends RectF {
     }
 
     public void update() {
-        if (left == right == true) {
+        if (left == true && right == true) {
             dx = 0;
             dy = 0;
-            left = right = false;
+
         }
         if (centerY() + width()/2 + dy <=bottree) {
             offset(dx,dy);
-            dx = 0;
-            dy = ySpeed;
         }
+        dx = 0;
+        dy = ySpeed;
+        left = right = false;
     }
 
     public void draw(Canvas canvas) {

@@ -93,6 +93,7 @@ public class Tree {
             leaf.update();
         }
     }
+
     public void draw(Canvas canvas) {
         canvas.drawRect(left,top,left+width,top+height,bark);
         for (Leaf leaf:leaves) {
