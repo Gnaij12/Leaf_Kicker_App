@@ -6,9 +6,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 public class Leaf extends RectF {
-    private int dx,dy,color,bottree;
-    private int ySpeed = 5;
-    private int xSpeed = 6;
+    private int dx;
+    private int dy;
+    private int color;
+    private final int bottree;
+    private final int ySpeed = 5;
+    private final int xSpeed = 6;
     private boolean left,right = false;
     public Leaf(float left, float top, float right, float bottom, int dx, int dy, int color,int bottree) {
         super(left, top, right, bottom);
@@ -31,7 +34,7 @@ public class Leaf extends RectF {
     }
 
     public void update() {
-        if (left == true && right == true) {
+        if (left && right) {
             dx = 0;
             dy = 0;
 

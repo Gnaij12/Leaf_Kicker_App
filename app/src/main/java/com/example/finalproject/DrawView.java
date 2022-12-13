@@ -1,6 +1,7 @@
 package com.example.finalproject;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -9,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -30,6 +32,8 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private Thread mGameThread = null;
     private SurfaceHolder mSurfaceHolder;
     private Context mContext;
+    private Person person;
+    private Joystick joystick;
 
 //    @Override
 //    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -58,6 +62,9 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         for (Point point: points) {
             path.lineTo(point.x,point.y);
         }
+        person = new Person(width/2-100,height-200,width/2+100,height,5);
+        person.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.classywalk));
+        joystick = new Joystick(width-100,height-100,100,50);
     }
 
     public DrawView(Context context, @Nullable AttributeSet attrs) {
@@ -67,8 +74,6 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     }
 
     private void drawMe(Canvas canvas) {
-
-
         canvas.drawPath(path,pathPaint);
         if (count >= delay) {
             tree4.update();
@@ -77,15 +82,23 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
             tree1.update();
             count = 0;
         }
+        joystick.update();
+        joystick.draw(canvas);
+        person.update(canvas);
+
         tree4.updateLeaves();
         tree3.updateLeaves();
         tree2.updateLeaves();
         tree1.updateLeaves();
+        person.draw(canvas);
+
         tree4.draw(canvas);
         tree3.draw(canvas);
         tree2.draw(canvas);
         tree1.draw(canvas);
         count++;
+
+
 //        invalidate();
     }
 
@@ -133,5 +146,9 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         mRunning = true;
         mGameThread = new Thread(this);
         mGameThread.start();
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return true;
     }
 }
