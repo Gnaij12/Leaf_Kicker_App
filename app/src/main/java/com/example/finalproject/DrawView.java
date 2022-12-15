@@ -34,6 +34,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private Context mContext;
     private Person person;
     private Joystick joystick;
+    public static final int FPS = 60;
 
 //    @Override
 //    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -62,9 +63,9 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         for (Point point: points) {
             path.lineTo(point.x,point.y);
         }
-        person = new Person(width/2-100,height-200,width/2+100,height,5);
+        person = new Person(width/2-100,height-200,width/2+100,height,600.0);
         person.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.classywalk));
-        joystick = new Joystick(width-100,height-100,100,50);
+        joystick = new Joystick(width-200,height-150,100,50);
     }
 
     public DrawView(Context context, @Nullable AttributeSet attrs) {
@@ -84,7 +85,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         }
         joystick.update();
         joystick.draw(canvas);
-        person.update(canvas);
+        person.update(canvas,joystick);
 
         tree4.updateLeaves();
         tree3.updateLeaves();
@@ -107,7 +108,6 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         Canvas canvas;
         long frameStart;
         long frameTime;
-        final int FPS = 60;
         while (mRunning) {
             if (mSurfaceHolder == null) {return;}
             if (mSurfaceHolder.getSurface().isValid()) {
@@ -149,6 +149,22 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return true;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (joystick.isPressed((double)event.getX(),(double)event.getY())) {
+                    joystick.setIsPressed(true);
+                }
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if (joystick.getIsPressed()) {
+                    joystick.setActuator((double) event.getX(), (double) event.getY());
+                }
+                return true;
+            case MotionEvent.ACTION_UP:
+                joystick.setIsPressed(false);
+                joystick.resetActuator();
+                return true;
+        }
+        return super.onTouchEvent(event);
     }
 }
