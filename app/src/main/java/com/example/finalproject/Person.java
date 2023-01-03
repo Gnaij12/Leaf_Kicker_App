@@ -33,6 +33,9 @@ class Person extends RectF {
 
     public Person(float left, float top, float right, float bottom, double speedPixels) {
         super(left, top, right, bottom);
+        tempLeft = left;
+        tempRight = right;
+        tempTop = top;
         this.maxSpeed = speedPixels / DrawView.FPS;
     }
 
@@ -47,9 +50,12 @@ class Person extends RectF {
         if (!(dX == 0.0 && dY == 0.0)) {
             float offdX = (float)dX;
             float offdY = (float)dY;
-            if (left + dX < 0 || right + dX > canvas.getWidth())//if next step hits boundary
+            if (tempLeft + dX < 0 && dX < 0)//if next step hits boundary
                 offdX = 0;
-            if (top + dY < 0 || bottom + dY > canvas.getHeight())//if next step hits boundary
+            else if (tempRight + dX > canvas.getWidth() && dX > 0) {
+                offdX = 0;
+            }
+            if (tempTop + dY < 0 || bottom + dY > canvas.getHeight())//if next step hits boundary
                 offdY = 0;
             offset(offdX, offdY);//moves dX to the right and dY downwards
             if(animationDelay--<0) {//increment to next sprite image after delay
@@ -64,7 +70,6 @@ class Person extends RectF {
         left = (float) (left + (right-left) * (1-ratio)/2);
         right = (float) (right - (right-left) * (1-ratio)/2);
         top = (float) (top + (bottom-top) * (1-ratio));
-
 
     }
 
@@ -92,9 +97,16 @@ class Person extends RectF {
 
             }
         }
+        float temp2Left = left;
+        float temp2Right = right;
+        float temp2Top = top;
         left = tempLeft;
         right = tempRight;
         top = tempTop;
+        tempLeft = temp2Left;
+        tempRight = temp2Right;
+        tempTop = temp2Top;
+
 
     }
 
@@ -113,5 +125,12 @@ class Person extends RectF {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public double getdX() {
+        return dX;
+    }
+    public double getdY() {
+        return dY;
     }
 }

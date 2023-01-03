@@ -80,7 +80,7 @@ public class Tree {
             paints[iChange].setColor(colors[colorSelection[iChange]]);
         }
     }
-    public void updateLeaves() {
+    public void updateLeaves(Person person) {
         for (int i = 0;i<leaves.size();i++) {
             Leaf leaf = leaves.get(i);
 //            boolean intersect = false;
@@ -90,7 +90,11 @@ public class Tree {
 //                    intersect = true;
                 }
             }
-            leaf.update();
+            if (leaf.intersect(person)) {
+                leaf.offset((float)person.getdX()*20,(float)person.getdY()*50);
+            }else {
+                leaf.update();
+            }
         }
     }
 

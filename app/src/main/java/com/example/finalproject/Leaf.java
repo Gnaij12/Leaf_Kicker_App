@@ -12,7 +12,7 @@ public class Leaf extends RectF {
     private final int bottree;
     private final int ySpeed = 5;
     private final int xSpeed = 6;
-    private boolean left,right = false;
+    private boolean onLeft,onRight = false;
     public Leaf(float left, float top, float right, float bottom, int dx, int dy, int color,int bottree) {
         super(left, top, right, bottom);
         this.dx = dx;
@@ -34,7 +34,7 @@ public class Leaf extends RectF {
     }
 
     public void update() {
-        if (left && right) {
+        if (onLeft && onRight) {
             dx = 0;
             dy = 0;
 
@@ -44,7 +44,7 @@ public class Leaf extends RectF {
         }
         dx = 0;
         dy = ySpeed;
-        left = right = false;
+        onLeft = onRight = false;
     }
 
     public void draw(Canvas canvas) {
@@ -57,10 +57,10 @@ public class Leaf extends RectF {
         if (centerY() < leaf.centerY() && (dis < Math.abs(width()/2 -leaf.width()/2) || dis < width()/2 + leaf.width()/2)) {
             if (centerX() >= leaf.centerX()) {
                 dx = xSpeed;
-                left = true;
+                onLeft = true;
             }else {
                 dx = -xSpeed;
-                right = true;
+                onRight = true;
             }
             return true;
         }

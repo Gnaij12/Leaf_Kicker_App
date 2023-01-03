@@ -63,7 +63,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         for (Point point: points) {
             path.lineTo(point.x,point.y);
         }
-        person = new Person(width/2-100,height-200,width/2+100,height,600.0);
+        person = new Person(width/2-100,height-200,width/2+100,height,800.0);
         person.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.classywalk));
         joystick = new Joystick(width-200,height-150,100,50);
     }
@@ -87,10 +87,10 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         joystick.draw(canvas);
         person.update(canvas,joystick);
 
-        tree4.updateLeaves();
-        tree3.updateLeaves();
-        tree2.updateLeaves();
-        tree1.updateLeaves();
+        tree4.updateLeaves(person);
+        tree3.updateLeaves(person);
+        tree2.updateLeaves(person);
+        tree1.updateLeaves(person);
         person.draw(canvas);
 
         tree4.draw(canvas);
