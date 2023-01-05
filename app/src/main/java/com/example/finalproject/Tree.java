@@ -3,6 +3,7 @@ package com.example.finalproject;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,9 +91,29 @@ public class Tree {
 //                    intersect = true;
                 }
             }
-            if (leaf.intersect(person)) {
-                leaf.offset((float)person.getdX()*20,(float)person.getdY()*50);
-            }else {
+            float pDX = (float)person.getdX();
+            float pDY = (float)person.getdY();
+            float lDX = pDX * 3;
+            float lDY = pDY * 6;
+            if (lDX != 0 && lDY != 0 && !leaf.getKicked() && RectF.intersects(leaf,person)) {
+//                leaf.offset(pDX*20,pDY*50);
+                if (Math.abs(lDY) >= Math.abs(lDX)) {
+                    if (lDY > 0) {
+                        leaf.setKickedDown(true);
+                    }else {
+                        leaf.setKickedUp(true);
+                    }
+                }else {
+                    if (lDX > 0) {
+                        leaf.setKickedRight(true);
+                    }else {
+                        leaf.setKickedLeft(true);
+                    }
+                }
+                leaf.setDx(lDX);
+                leaf.setDy(lDY);
+            }
+            else {
                 leaf.update();
             }
         }

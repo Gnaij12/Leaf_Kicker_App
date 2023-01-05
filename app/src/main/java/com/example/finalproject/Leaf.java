@@ -6,14 +6,17 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 public class Leaf extends RectF {
-    private int dx;
-    private int dy;
+    private float dx;
+    private float dy;
     private int color;
     private final int bottree;
-    private final int ySpeed = 5;
-    private final int xSpeed = 6;
+    private final float xMovePastSpeed = 6;
+    private final float maxYSpeed = 5;
+    private final float gravity = 3;
+    private final float xGravity = 1.5f;
+    private boolean kickedUp, kickedDown, kickedRight, kickedLeft = false;
     private boolean onLeft,onRight = false;
-    public Leaf(float left, float top, float right, float bottom, int dx, int dy, int color,int bottree) {
+    public Leaf(float left, float top, float right, float bottom, float dx, float dy, int color,int bottree) {
         super(left, top, right, bottom);
         this.dx = dx;
         this.dy = dy;
@@ -34,16 +37,45 @@ public class Leaf extends RectF {
     }
 
     public void update() {
-        if (onLeft && onRight) {
-            dx = 0;
-            dy = 0;
-
-        }
-        if (centerY() + width()/2 + dy <=bottree) {
+        if (!getKicked()) {
+            if (onLeft && onRight) {
+                dx = 0;
+                dy = 0;
+            }
+            if (!onLeft && !onRight) {
+                dx = 0;
+            }
+            if (centerY() + width()/2 + dy <=bottree) {
+                offset(dx,dy);
+            }
+        }else {
             offset(dx,dy);
         }
-        dx = 0;
-        dy = ySpeed;
+
+        if (kickedUp && dy + gravity > 0) {
+            kickedUp = false;
+        }
+        if (kickedDown && dy - gravity < maxYSpeed) {
+            kickedDown = false;
+        }
+        if (kickedRight && dx -xGravity < 0) {
+            kickedRight = false;
+        }
+        if (kickedLeft && dx + xGravity > 0) {
+            kickedLeft = false;
+        }
+        if (dx-xGravity > 0) {
+            dx-=xGravity;
+        }
+        if (dx+xGravity < 0) {
+            dx+=xGravity;
+        }
+        if (dy + gravity <= maxYSpeed) {
+            dy += gravity;
+        }else if (dy - gravity >= maxYSpeed) {
+            dy-=gravity;
+        }
+        //ToDo: implement downward kicking
         onLeft = onRight = false;
     }
 
@@ -56,10 +88,10 @@ public class Leaf extends RectF {
         double dis = Math.sqrt(Math.pow(centerX()-leaf.centerX(),2)*2 + Math.pow(centerY()-leaf.centerY(),2)*6);
         if (centerY() < leaf.centerY() && (dis < Math.abs(width()/2 -leaf.width()/2) || dis < width()/2 + leaf.width()/2)) {
             if (centerX() >= leaf.centerX()) {
-                dx = xSpeed;
+                dx = xMovePastSpeed;
                 onLeft = true;
             }else {
-                dx = -xSpeed;
+                dx = -xMovePastSpeed;
                 onRight = true;
             }
             return true;
@@ -67,19 +99,19 @@ public class Leaf extends RectF {
         return false;
     }
 
-    public int getDx() {
+    public float getDx() {
         return dx;
     }
 
-    public void setDx(int dx) {
+    public void setDx(float dx) {
         this.dx = dx;
     }
 
-    public int getDy() {
+    public float getDy() {
         return dy;
     }
 
-    public void setDy(int dy) {
+    public void setDy(float dy) {
         this.dy = dy;
     }
 
@@ -90,4 +122,33 @@ public class Leaf extends RectF {
     public void setColor(int color) {
         this.color = color;
     }
+
+    public void setKickedUp(boolean kickedUp) {
+        this.kickedUp = kickedUp;
+    }
+    public void setKickedDown(boolean kickedDown) {
+        this.kickedDown = kickedDown;
+    }
+    public void setKickedLeft(boolean kickedLeft) {
+        this.kickedLeft = kickedLeft;
+    }
+    public void setKickedRight(boolean kickedRight) {
+        this.kickedRight = kickedRight;
+    }
+    public boolean getKickedUp() {
+        return kickedUp;
+    }
+    public boolean getKickedDown() {
+        return kickedDown;
+    }
+    public boolean getKickedLeft() {
+        return kickedLeft;
+    }
+    public boolean getKickedRight() {
+        return kickedRight;
+    }
+    public boolean getKicked() {
+        return kickedUp || kickedDown || kickedLeft || kickedRight;
+    }
+
 }
