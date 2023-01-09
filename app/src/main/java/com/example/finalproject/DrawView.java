@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -34,6 +35,10 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private Context mContext;
     private Person person;
     private Joystick joystick;
+    private Paint grass;
+    private int mul = 255;
+    private int mulChange = -1;
+    private LightingColorFilter lcf;
     public static final int FPS = 60;
 
 //    @Override
@@ -41,7 +46,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
 //        super.onLayout(changed, left, top, right, bottom);
 //
 //    }
-
+    //TODO: Add new features
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -66,6 +71,8 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         person = new Person(width/2-100,height-200,width/2+100,height,800.0);
         person.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.classywalk));
         joystick = new Joystick(width-200,height-150,100,50);
+        grass = new Paint();
+        grass.setColor(Color.rgb(0,136,0));
     }
 
     public DrawView(Context context, @Nullable AttributeSet attrs) {
@@ -75,6 +82,15 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     }
 
     private void drawMe(Canvas canvas) {
+        lcf = new LightingColorFilter(Color.rgb(mul,mul,0),Color.rgb(0,0,0));
+        grass.setColorFilter(lcf);
+        canvas.drawRect(0,0,width,height,grass);
+        if (mul == 127) {
+            mulChange = 1;
+        }else if (mul == 255) {
+            mulChange = -1;
+        }
+        mul+=mulChange;
         canvas.drawPath(path,pathPaint);
         if (count >= delay) {
             tree4.update();
@@ -98,6 +114,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         tree2.draw(canvas);
         tree1.draw(canvas);
         count++;
+
 
 
 //        invalidate();

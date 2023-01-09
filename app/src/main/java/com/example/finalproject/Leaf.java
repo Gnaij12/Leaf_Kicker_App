@@ -75,7 +75,6 @@ public class Leaf extends RectF {
         }else if (dy - gravity >= maxYSpeed) {
             dy-=gravity;
         }
-        //ToDo: implement downward kicking
         onLeft = onRight = false;
     }
 
