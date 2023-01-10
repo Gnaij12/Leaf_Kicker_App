@@ -38,6 +38,10 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private Paint grass;
     private int mul = 255;
     private int mulChange = -1;
+    private int add = 0;
+    private int addChange = 0;
+    private int backgroundDelay = 5;
+    private int backgroundCount = 0;
     private LightingColorFilter lcf;
     public static final int FPS = 60;
 
@@ -63,6 +67,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         path = new Path();
         count = 0;
         pathPaint.setShader(new LinearGradient(width/3, height, width/3+150, 0, Color.rgb(240,222,192), Color.rgb(155,118,83), Shader.TileMode.MIRROR));
+        pathPaint.setDither(true);
         points = new Point[]{new Point(width/3+150,height),new Point(2*width/3+50,0),new Point(2*width/3,0)};
         path.moveTo(width/3,height);
         for (Point point: points) {
@@ -82,15 +87,8 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     }
 
     private void drawMe(Canvas canvas) {
-        lcf = new LightingColorFilter(Color.rgb(mul,mul,0),Color.rgb(0,0,0));
-        grass.setColorFilter(lcf);
-        canvas.drawRect(0,0,width,height,grass);
-        if (mul == 127) {
-            mulChange = 1;
-        }else if (mul == 255) {
-            mulChange = -1;
-        }
-        mul+=mulChange;
+        lcf = new LightingColorFilter(Color.rgb(mul,mul,mul),Color.rgb(add/3,add/3,0));
+        pathPaint.setColorFilter(lcf);
         canvas.drawPath(path,pathPaint);
         if (count >= delay) {
             tree4.update();
@@ -132,7 +130,30 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
                 canvas = mSurfaceHolder.lockCanvas();
                 if (canvas != null) {
                     canvas.save();
-                    canvas.drawRGB(0,88,0);
+                    lcf = new LightingColorFilter(Color.rgb(mul,mul,mul),Color.rgb(add,0,0));
+                    grass.setColorFilter(lcf);
+                    canvas.drawPaint(grass);
+                    if (backgroundCount == backgroundDelay) {
+                        if (mul == 224) {
+                            mulChange = 1;
+                        } else if (mul == 235) {
+                            mulChange = -1;
+                        }
+                        mul += mulChange;
+                        if ((mul == 185 && mul + mulChange == 184) || (mul == 145 && mul + mulChange == 146)) {
+                            addChange = 5;
+                        }else if (mul == 165) {
+                            addChange = -5;
+                        }
+                        if ((mul == 185 && mul + mulChange == 186) || (mul == 145 && mul + mulChange == 144)) {
+                            addChange = 0;
+                        }
+                        add += addChange;
+                        System.out.println(mul);
+                        System.out.println(add);
+                        backgroundCount = 0;
+                    }
+                    backgroundCount++;
                     try {
                         drawMe(canvas);
                     }finally {
