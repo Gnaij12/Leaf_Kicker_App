@@ -5,14 +5,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Joystick {
-    private Paint outerCirclePaint;
-    private Paint innerCirclePaint;
-    private int outerCircleRadius;
-    private int innerCircleRadius;
+    private final Paint outerCirclePaint;
+    private final Paint innerCirclePaint;
+    private final int outerCircleRadius;
+    private final int innerCircleRadius;
     private int innerCircleCenterPositionY;
     private int innerCircleCenterPositionX;
-    private int outerCircleCenterPositionX;
-    private int outerCircleCenterPositionY;
+    private final int outerCircleCenterPositionX;
+    private final int outerCircleCenterPositionY;
     private double joystickCenterToTouchDis;
     private boolean isPressed;
     private double actuatorX;

@@ -1,14 +1,13 @@
 package com.example.finalproject;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
 public class Leaf extends RectF {
     private float dx;
     private float dy;
-    private int color;
+    private final int color;
     private final int bottree;
     private final float xMovePastSpeed = 6;
     private final float maxYSpeed = 5;
@@ -24,20 +23,20 @@ public class Leaf extends RectF {
         this.bottree = bottree;
     }
 
-    public Leaf(float left, float top, float right, float bottom) {
-        this(left, top, right, bottom,0,5, Color.MAGENTA,-1);
-    }
+//    public Leaf(float left, float top, float right, float bottom) {
+//        this(left, top, right, bottom,0,5, Color.MAGENTA,-1);
+//    }
 
-    public Leaf(int dx, int dy, int color) {
-        this(1,1,111,111,dx,dy,color,-1);
-    }
+//    public Leaf(int dx, int dy, int color) {
+//        this(1,1,111,111,dx,dy,color,-1);
+//    }
 
-    public Leaf() {
-        this(0,5,Color.GREEN);
-    }
+//    public Leaf() {
+//        this(0,5,Color.GREEN);
+//    }
 
     public void update() {
-        if (!getKicked()) {
+        if (getKicked()) {
             if (onLeft && onRight) {
                 dx = 0;
                 dy = 0;
@@ -83,7 +82,7 @@ public class Leaf extends RectF {
         paint.setColor(color);
         canvas.drawCircle(centerX(),centerY(),width()/2,paint);
     }
-    public boolean onTop(Leaf leaf) {
+    public void onTop(Leaf leaf) {
         double dis = Math.sqrt(Math.pow(centerX()-leaf.centerX(),2)*2 + Math.pow(centerY()-leaf.centerY(),2)*6);
         if (centerY() < leaf.centerY() && (dis < Math.abs(width()/2 -leaf.width()/2) || dis < width()/2 + leaf.width()/2)) {
             if (centerX() >= leaf.centerX()) {
@@ -93,34 +92,32 @@ public class Leaf extends RectF {
                 dx = -xMovePastSpeed;
                 onRight = true;
             }
-            return true;
         }
-        return false;
     }
 
-    public float getDx() {
-        return dx;
-    }
+//    public float getDx() {
+//        return dx;
+//    }
 
     public void setDx(float dx) {
         this.dx = dx;
     }
 
-    public float getDy() {
-        return dy;
-    }
+//    public float getDy() {
+//        return dy;
+//    }
 
     public void setDy(float dy) {
         this.dy = dy;
     }
 
-    public int getColor() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
+//    public int getColor() {
+//        return color;
+//    }
+//
+//    public void setColor(int color) {
+//        this.color = color;
+//    }
 
     public void setKickedUp(boolean kickedUp) {
         this.kickedUp = kickedUp;
@@ -134,20 +131,20 @@ public class Leaf extends RectF {
     public void setKickedRight(boolean kickedRight) {
         this.kickedRight = kickedRight;
     }
-    public boolean getKickedUp() {
-        return kickedUp;
-    }
-    public boolean getKickedDown() {
-        return kickedDown;
-    }
-    public boolean getKickedLeft() {
-        return kickedLeft;
-    }
-    public boolean getKickedRight() {
-        return kickedRight;
-    }
+//    public boolean getKickedUp() {
+//        return kickedUp;
+//    }
+//    public boolean getKickedDown() {
+//        return kickedDown;
+//    }
+//    public boolean getKickedLeft() {
+//        return kickedLeft;
+//    }
+//    public boolean getKickedRight() {
+//        return kickedRight;
+//    }
     public boolean getKicked() {
-        return kickedUp || kickedDown || kickedLeft || kickedRight;
+        return !kickedUp && !kickedDown && !kickedLeft && !kickedRight;
     }
 
 }

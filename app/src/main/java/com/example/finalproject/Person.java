@@ -11,25 +11,24 @@ class Person extends RectF {
     private static final int BMP_COLUMNS = 4;
     private static final int BMP_ROWS = 4;
     private static final int DOWN = 0, LEFT = 1, RIGHT = 2, UP = 3;
-    private double maxSpeed;
+    private final double maxSpeed;
     private Bitmap bitmap;
-    private int currentFrame = 0, iconWidth, iconHeight,animationDelay = 20;
+    private int currentFrame = 0, animationDelay = 20;
     private double dX = 0.0, dY = 0.0;
     private int previous = 3;
     private float tempLeft,tempRight,tempTop;
-    private double tempMaxSpeed;
 
-    public Person() {
-        this(400.0);
-    }
+//    public Person() {
+//        this(400.0);
+//    }
 
-    public Person(double speedPixels) {
-        this(1, 1, 100, 100, speedPixels);
-    }
+//    public Person(double speedPixels) {
+//        this(1, 1, 100, 100, speedPixels);
+//    }
 
-    public Person(float left, float top, float right, float bottom) {
-        this(left, top, right, bottom, 400.0);
-    }
+//    public Person(float left, float top, float right, float bottom) {
+//        this(left, top, right, bottom, 400.0);
+//    }
 
     public Person(float left, float top, float right, float bottom, double speedPixels) {
         super(left, top, right, bottom);
@@ -40,7 +39,7 @@ class Person extends RectF {
     }
 
     public void update(Canvas canvas, Joystick joystick) {
-        tempMaxSpeed = maxSpeed;
+        double tempMaxSpeed = maxSpeed;
         double ratio = bottom/canvas.getHeight();
         ratio = (ratio * (1-1.0/3)) + 1.0/3;
         tempMaxSpeed *= ratio;
@@ -79,22 +78,14 @@ class Person extends RectF {
             paint.setColor(Color.RED);//sets its color
             canvas.drawCircle(centerX(), centerY(), width() / 2, paint);//draws circle
         } else {
-            if (dX == 0.0 && dY == 0.0) {
-                iconWidth = bitmap.getWidth() / BMP_COLUMNS;//calculate width of 1 image
-                iconHeight = bitmap.getHeight() / BMP_ROWS; //calculate height of 1 image
-                int srcX = currentFrame * iconWidth;       //set x of source rectangle inside of bitmap based on current frame
-                int srcY = previous * iconHeight;
-                Rect src = new Rect(srcX, srcY, srcX + iconWidth, srcY + iconHeight);  //defines the rectangle inside of heroBmp to displayed
-                canvas.drawBitmap(bitmap, src, this, null); //draw an image
-            }else {
-                iconWidth = bitmap.getWidth() / BMP_COLUMNS;//calculate width of 1 image
-                iconHeight = bitmap.getHeight() / BMP_ROWS; //calculate height of 1 image
-                int srcX = currentFrame * iconWidth;       //set x of source rectangle inside of bitmap based on current frame
+            int iconWidth = bitmap.getWidth() / BMP_COLUMNS;//calculate width of 1 image
+            int iconHeight = bitmap.getHeight() / BMP_ROWS; //calculate height of 1 image
+            int srcX = currentFrame * iconWidth;       //set x of source rectangle inside of bitmap based on current frame
+            int srcY = previous * iconHeight;
+            Rect src = new Rect(srcX, srcY, srcX + iconWidth, srcY + iconHeight);  //defines the rectangle inside of heroBmp to displayed
+            canvas.drawBitmap(bitmap, src, this, null); //draw an image
+            if (!(dX == 0.0 && dY == 0.0)) {
                 previous = getAnimationRow();
-                int srcY = previous * iconHeight; //set y to row of bitmap based on direction
-                Rect src = new Rect(srcX, srcY, srcX + iconWidth, srcY + iconHeight);  //defines the rectangle inside of heroBmp to displayed
-                canvas.drawBitmap(bitmap, src, this, null); //draw an image
-
             }
         }
         float temp2Left = left;
@@ -119,9 +110,9 @@ class Person extends RectF {
 
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
+//    public Bitmap getBitmap() {
+//        return bitmap;
+//    }
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;

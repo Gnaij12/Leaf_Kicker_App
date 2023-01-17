@@ -23,10 +23,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private Tree tree3;
     private Tree tree4;
     private Path path;
-    private Point[] points;
-    private int height;
-    private int width;
-    private int delay = 2;
+    private final int delay = 2;
     private int count;
     Paint pathPaint;
     private boolean mRunning;
@@ -40,44 +37,47 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
     private int mulChange = -1;
     private int add = 0;
     private int addChange = 0;
-    private int backgroundDelay = 5;
+    private final int backgroundDelay = 5;
     private int backgroundCount = 0;
     private LightingColorFilter lcf;
     public static final int FPS = 60;
+    private boolean init = false;
 
 //    @Override
 //    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 //        super.onLayout(changed, left, top, right, bottom);
 //
 //    }
-    //TODO: Add new features
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        height = getHeight();
-        width = getWidth();
+        if (!init) {
+            int height = getHeight();
+            int width = getWidth();
 
-        tree2 = new Tree(700,900,100*9/10,400*9/10,25*9/10, 150*9/10);
-        tree1 = new Tree(200,1200,100,400,25, 150);
-        tree3 = new Tree(400,500,100*7/10,400*7/10,25*7/10, 150*7/10);
-        tree4 = new Tree(800,100,100*4/10,400*4/10,25*4/10, 150*4/10);
-        pathPaint = new Paint();
-//        pathPaint.setColor(Color.rgb(240,222,192));
-        path = new Path();
-        count = 0;
-        pathPaint.setShader(new LinearGradient(width/3, height, width/3+150, 0, Color.rgb(240,222,192), Color.rgb(155,118,83), Shader.TileMode.MIRROR));
-        pathPaint.setDither(true);
-        points = new Point[]{new Point(width/3+150,height),new Point(2*width/3+50,0),new Point(2*width/3,0)};
-        path.moveTo(width/3,height);
-        for (Point point: points) {
-            path.lineTo(point.x,point.y);
+            tree1 = new Tree(width / 5, (int) (height / 1.35), 100, 400, 25, 150);
+            tree2 = new Tree((int) (width / 1.5), (int) (height / 1.75), 100 * 9 / 10, 400 * 9 / 10, 25 * 9 / 10, 150 * 9 / 10);
+            tree3 = new Tree((int) (width / 2.75), (int) (height / 3), 100 * 7 / 10, 400 * 7 / 10, 25 * 7 / 10, 150 * 7 / 10);
+            tree4 = new Tree((int) (width / 1.25), (int) (height / 15), 100 * 4 / 10, 400 * 4 / 10, 25 * 4 / 10, 150 * 4 / 10);
+            pathPaint = new Paint();
+            //        pathPaint.setColor(Color.rgb(240,222,192));
+            path = new Path();
+            count = 0;
+            pathPaint.setShader(new LinearGradient(width / 3f, height, width / 3f + 150, 0, Color.rgb(240, 222, 192), Color.rgb(155, 118, 83), Shader.TileMode.MIRROR));
+            pathPaint.setDither(true);
+            Point[] points = new Point[]{new Point(width / 3 + 150, height), new Point(2 * width / 3 + 50, 0), new Point(2 * width / 3, 0)};
+            path.moveTo(width / 3f, height);
+            for (Point point : points) {
+                path.lineTo(point.x, point.y);
+            }
+            person = new Person(width / 2f - 100, height - 200, width / 2f + 100, height, 800.0);
+            person.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.classywalk));
+            joystick = new Joystick(width - 200, height - 150, 100, 50);
+            grass = new Paint();
+            grass.setColor(Color.rgb(0, 136, 0));
+            init = true;
         }
-        person = new Person(width/2-100,height-200,width/2+100,height,800.0);
-        person.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.classywalk));
-        joystick = new Joystick(width-200,height-150,100,50);
-        grass = new Paint();
-        grass.setColor(Color.rgb(0,136,0));
     }
 
     public DrawView(Context context, @Nullable AttributeSet attrs) {
@@ -113,8 +113,6 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
         tree1.draw(canvas);
         count++;
 
-
-
 //        invalidate();
     }
 
@@ -134,9 +132,9 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
                     grass.setColorFilter(lcf);
                     canvas.drawPaint(grass);
                     if (backgroundCount == backgroundDelay) {
-                        if (mul == 224) {
+                        if (mul == 100) {
                             mulChange = 1;
-                        } else if (mul == 235) {
+                        } else if (mul == 255) {
                             mulChange = -1;
                         }
                         mul += mulChange;
@@ -149,8 +147,8 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
                             addChange = 0;
                         }
                         add += addChange;
-                        System.out.println(mul);
-                        System.out.println(add);
+//                        System.out.println(mul);
+//                        System.out.println(add);
                         backgroundCount = 0;
                     }
                     backgroundCount++;
@@ -191,6 +189,7 @@ public class DrawView extends SurfaceView implements Runnable{ //Maybe have leav
             case MotionEvent.ACTION_DOWN:
                 if (joystick.isPressed((double)event.getX(),(double)event.getY())) {
                     joystick.setIsPressed(true);
+                    joystick.setActuator((double) event.getX(), (double) event.getY());
                 }
                 return true;
             case MotionEvent.ACTION_MOVE:

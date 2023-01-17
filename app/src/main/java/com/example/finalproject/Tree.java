@@ -9,24 +9,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Tree {
-    private float[] radii;
-    private int[] colorSelection;
-    private Paint bark = new Paint();
-    private int left,top,width,height;
-    private int[] x;
-    private int[] y;
-    private int[] colors;
-    private Paint[] paints;
-    private ArrayList<Integer> notChanged;
-    private int size = 100;
-    private ArrayList<Leaf> leaves;
+    private final float[] radii;
+    private final int[] colorSelection;
+    private final Paint bark = new Paint();
+    private final int left,top,width,height;
+    private final int[] x;
+    private final int[] y;
+    private final int[] colors;
+    private final Paint[] paints;
+    private final ArrayList<Integer> notChanged;
+    private final int size = 100;
+    private final ArrayList<Leaf> leaves;
     public Tree(int l, int t, int w, int h, int minLeafRadius, int treeRadius) {
         radii = new float[size];
         colorSelection = new int[size];
         paints = new Paint[size];
         x = new int[size];
         y = new int[size];
-        notChanged = new ArrayList<Integer>();
+        notChanged = new ArrayList<>();
         colors = new int[]{Color.rgb(255, 183, 197),Color.GREEN,Color.rgb(145,15,0),Color.TRANSPARENT};
         left = l;
         top = t;
@@ -46,7 +46,7 @@ public class Tree {
         }
         bark.setColor(Color.rgb(97, 59, 22));
         Collections.shuffle(notChanged);
-        leaves = new ArrayList<Leaf>();
+        leaves = new ArrayList<>();
     }
 
     public void update() {
@@ -95,7 +95,7 @@ public class Tree {
             float pDY = (float)person.getdY();
             float lDX = pDX * 3;
             float lDY = pDY * 6;
-            if (lDX != 0 && lDY != 0 && !leaf.getKicked() && RectF.intersects(leaf,person)) {
+            if (lDX != 0 && lDY != 0 && leaf.getKicked() && RectF.intersects(leaf,person)) {
 //                leaf.offset(pDX*20,pDY*50);
                 if (Math.abs(lDY) >= Math.abs(lDX)) {
                     if (lDY > 0) {
